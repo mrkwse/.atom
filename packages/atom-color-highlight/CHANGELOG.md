@@ -1,3 +1,69 @@
+<a name="v2.0.13"></a>
+# v2.0.13 (2014-11-30)
+
+## :bug: Bug Fixes
+
+- Fix error raised on view destruction ([58ab0830](https://github.com/abe33/atom-color-highlight/commit/58ab0830f71f18d0c7946868eb8da2a1b5b82d4c), [#60](https://github.com/abe33/atom-color-highlight/issues/60))
+
+<a name="v2.0.12"></a>
+# v2.0.12 (2014-11-28)
+
+## :bug: Bug Fixes
+
+- Fix error raised when closing the last editor of a pane ([8ee359eb](https://github.com/abe33/atom-color-highlight/commit/8ee359ebb17b96cfae8dc2174d22f2d2c102198d))
+
+
+<a name="v2.0.11"></a>
+# v2.0.11 (2014-11-27)
+
+## :bug: Bug Fixes
+
+- Remove remaining logs ([73544811](https://github.com/abe33/atom-color-highlight/commit/73544811e7a4669d24ebafc359e9d7558936b4ab), [#58](https://github.com/abe33/atom-color-highlight/issues/58))
+
+
+<a name="v2.0.10"></a>
+# v2.0.10 (2014-11-26)
+
+## :package: Dependencies
+
+- Upgrade to pigments v3.0.4.
+
+<a name="v2.0.9"></a>
+# v2.0.9 (2014-11-26)
+
+## :bug: Bug Fixes
+
+- Prevent errors when accessing finder ([a0eba38d](https://github.com/abe33/atom-color-highlight/commit/a0eba38dd4592e35e5b63950c096ab9fb3ea1f67), [#57](https://github.com/abe33/atom-color-highlight/issues/57))
+
+<a name="v2.0.8"></a>
+# v2.0.8 (2014-11-25)
+
+## :bug: Bug Fixes
+
+- Change how finder package is required in models ([147647a2](https://github.com/abe33/atom-color-highlight/commit/147647a250a9aed6a39a04813af210dc73142199))
+
+<a name="v2.0.7"></a>
+# v2.0.7 (2014-11-25)
+
+## :package: Dependencies
+
+- Upgrade to pigments v3.0.3.
+
+<a name="v2.0.6"></a>
+# v2.0.6 (2014-11-17)
+
+## :memo: Documentation
+
+- Add a more detailed description of the `excludedGrammars` setting.
+
+<a name="v2.0.5"></a>
+# v2.0.5 (2014-11-14)
+
+## :bug: Bug Fixes
+
+- Rebuild markers on editor config changes ([845b8d65](https://github.com/abe33/atom-color-highlight/commit/845b8d6537538fc9036eb7141bcfa19b3e4d6e9a), [#32](https://github.com/abe33/atom-color-highlight/issues/32))
+- Fix region styles when shadow DOM is enabled ([06c0f4e2](https://github.com/abe33/atom-color-highlight/commit/06c0f4e2aac3f466cecc56bc47ffa5929015568b))
+
 <a name="v2.0.4"></a>
 # v2.0.4 (2014-10-22)
 

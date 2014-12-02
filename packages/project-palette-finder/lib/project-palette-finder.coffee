@@ -50,6 +50,15 @@ class ProjectPaletteFinder
       items:
         type: 'string'
 
+    paletteDisplay:
+      type: 'string'
+      default: 'list'
+      enum: ['list', 'grid']
+
+    paletteSort:
+      type: 'boolean'
+      default: false
+
   constructor: ->
     @Color = Color
 
@@ -119,7 +128,7 @@ class ProjectPaletteFinder
 
   scanProject: ->
     Palette ||= require './palette'
-    PaletteItem ||= require './palette-item'
+    PaletteItem ||= require('./palette-item')(Color)
 
     @palette = new Palette
 
@@ -160,7 +169,7 @@ class ProjectPaletteFinder
             .sort (a,b) ->
               b.length - a.length
 
-            paletteRegexp = '(' + items.join('|') + ')(?!-|[ \\t]*[\\.:=])\\b'
+            paletteRegexp = '(' + items.join('|') + ')(?!\\w|\\d|-|[ \\t]*[\\.:=])\\b'
             Color.removeExpression('palette')
 
             Color.addExpression 'palette', paletteRegexp, (color, expr) =>

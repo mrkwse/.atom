@@ -1,7 +1,7 @@
 {
   "name": "unity-ui",
   "theme": "ui",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "./lib/unity-ui",
   "private": false,
   "description": "An Atom theme for a more native experience on OS X.",
@@ -19,10 +19,23 @@
     "url": "https://github.com/orderedlist/unity-ui/issues"
   },
   "homepage": "https://github.com/orderedlist/unity-ui",
-  "_id": "unity-ui@1.0.1",
+  "_id": "unity-ui@1.0.3",
   "dist": {
-    "shasum": "9622d1ed450a1a873c7d93fcf0bfe550e14334bc"
+    "shasum": "d70047bf9b2dbc273ad4b21602b9c79b70379359"
   },
-  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114101-15056-1r1eazn/package.tgz",
-  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114101-15056-1r1eazn/package.tgz"
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114112-6643-g0csrp/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114112-6643-g0csrp/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".coffee": [
+        "lib/unity-ui.coffee"
+      ],
+      ".json": [
+        "package.json"
+      ]
+    },
+    "folders": []
+  }
 }

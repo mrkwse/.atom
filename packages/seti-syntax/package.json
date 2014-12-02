@@ -21,5 +21,15 @@
   "dist": {
     "shasum": "7e6162c3c0c863abc56530217c79c14a9cb31ddd"
   },
-  "_from": "/Users/mwuk/.atom/.node-gyp/.atom/.apm/seti-syntax/0.1.7/package.tgz"
+  "_from": "/Users/mwuk/.atom/.node-gyp/.atom/.apm/seti-syntax/0.1.7/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".json": [
+        "package.json"
+      ]
+    },
+    "folders": []
+  }
 }

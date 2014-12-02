@@ -140,36 +140,36 @@ class MinimapView extends View
 
     @displayCodeHighlights = atom.config.get('minimap.displayCodeHighlights')
 
-    @subscriptions.add @asDisposable atom.config.observe 'minimap.minimapScrollIndicator', =>
+    @subscriptions.add atom.config.observe 'minimap.minimapScrollIndicator', =>
       @miniScrollVisible = atom.config.get('minimap.minimapScrollIndicator')
       @miniScroller.toggleClass 'visible', @miniScrollVisible
 
-    @subscriptions.add @asDisposable atom.config.observe 'minimap.useHardwareAcceleration', =>
+    @subscriptions.add atom.config.observe 'minimap.useHardwareAcceleration', =>
       @updateScroll() if @ScrollView?
 
-    @subscriptions.add @asDisposable atom.config.observe 'minimap.displayCodeHighlights', =>
+    @subscriptions.add atom.config.observe 'minimap.displayCodeHighlights', =>
       newOptionValue = atom.config.get 'minimap.displayCodeHighlights'
       @setDisplayCodeHighlights(newOptionValue)
 
-    @subscriptions.add @asDisposable atom.config.observe 'minimap.adjustMinimapWidthToSoftWrap', (value) =>
+    @subscriptions.add atom.config.observe 'minimap.adjustMinimapWidthToSoftWrap', (value) =>
       if value
         @updateMinimapSize()
       else
         @resetMinimapWidthWithWrap()
 
-    @subscriptions.add @asDisposable atom.config.observe 'editor.lineHeight', =>
+    @subscriptions.add atom.config.observe 'editor.lineHeight', =>
       @computeScale()
       @updateMinimapView()
 
-    @subscriptions.add @asDisposable atom.config.observe 'editor.fontSize', =>
+    @subscriptions.add atom.config.observe 'editor.fontSize', =>
       @computeScale()
       @updateMinimapView()
 
-    @subscriptions.add @asDisposable atom.config.observe 'editor.softWrap', =>
+    @subscriptions.add atom.config.observe 'editor.softWrap', =>
       @updateMinimapSize()
       @updateMinimapView()
 
-    @subscriptions.add @asDisposable atom.config.observe 'editor.preferredLineLength', =>
+    @subscriptions.add atom.config.observe 'editor.preferredLineLength', =>
       @updateMinimapSize()
 
   # Internal: Computes the scale of the minimap display relatively to the
@@ -420,10 +420,22 @@ class MinimapView extends View
     # Hacked scroll-left
     @subscribe @scrollView, 'scroll.minimap', @updateScrollX
 
+    # We can't really know when a tab is dragged from a pane to
+    # another one, but as it regains the focus after that we can
+    # test if the parent view is still the same or is different.
+    @subscribe @editorView, 'focus', =>
+      if @editorView.getPaneView() isnt @paneView
+        @detachFromPaneView()
+        @paneView = @editorView.getPaneView()
+        @attachToPaneView()
+
+      true
+
   # Unsubscribes from the `Editor events`.
   unsubscribeFromEditor: ->
-    @unsubscribe @editor, '.minimap' if @editor?
-    @unsubscribe @scrollView, '.minimap' if @scrollView?
+    @unsubscribe @editor if @editor?
+    @unsubscribe @editorView if @editorView?
+    @unsubscribe @scrollView if @scrollView?
 
   # Event callbacks called when the active editor of a pane view
   # is changed.
@@ -537,11 +549,3 @@ class MinimapView extends View
   # transform - The css transformation {String}.
   transform: (el, transform) ->
     el.style.webkitTransform = el.style.transform = transform
-
-  # Convert a subscription on the deprecated model with a `::off` method into a
-  # `Disposable`.
-  #
-  # subscription - The subscription {Object} to wrap in a `Disposable`.
-  #
-  # Returns a `Disposable`.
-  asDisposable: (subscription) -> new Disposable -> subscription.off()
