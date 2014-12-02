@@ -1,0 +1,29 @@
+{
+  "name": "minimap-selection",
+  "main": "./lib/minimap-selection",
+  "version": "3.0.0",
+  "description": "Display the buffer's selections on the minimap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abe33/atom-minimap-selection"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "emissary": "1.x"
+  },
+  "readme": "# minimap-selection package\n\nDisplay the buffer's selections on the minimap\n\n![Screenshot](https://github.com/abe33/atom-minimap-selection/blob/master/screenshot.gif?raw=true)\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/abe33/atom-minimap-selection/issues"
+  },
+  "homepage": "https://github.com/abe33/atom-minimap-selection",
+  "_id": "minimap-selection@3.0.0",
+  "dist": {
+    "shasum": "0785ccd1290e6c46373b72e528af1e1b976e3b52"
+  },
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25848-10cghdx/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25848-10cghdx/package.tgz"
+}

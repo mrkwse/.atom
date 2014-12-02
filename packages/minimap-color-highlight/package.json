@@ -1,0 +1,35 @@
+{
+  "name": "minimap-color-highlight",
+  "main": "./lib/minimap-color-highlight",
+  "version": "3.0.2",
+  "description": "A short description of your package",
+  "author": {
+    "name": "Cédric Néhémie",
+    "email": "cedric.nehemie@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abe33/minimap-color-highlight"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "event-kit": ">= 0.7.2",
+    "underscore-plus": "1.x",
+    "q": "1.x"
+  },
+  "readme": "# minimap-color-highlight package\n\nA minimap binding for the `atom-color-highlight` package.\n\n![Minimap Color Highlight Screenshot](https://github.com/abe33/minimap-color-highlight/blob/master/screenshot.png?raw=true)\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/abe33/minimap-color-highlight/issues"
+  },
+  "homepage": "https://github.com/abe33/minimap-color-highlight",
+  "_id": "minimap-color-highlight@3.0.2",
+  "dist": {
+    "shasum": "548ccc56971b7254b238af784d782efb043ddf9a"
+  },
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25794-1fvi5kz/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25794-1fvi5kz/package.tgz"
+}

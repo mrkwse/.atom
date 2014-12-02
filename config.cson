@@ -1,0 +1,27 @@
+'global':
+  'editor':
+    'normalizeIndentOnPaste': false
+    'softTabs': false
+    'invisibles': {}
+    'fontSize': 12
+  'core':
+    'useReactEditor': true
+    'themes': [
+      'seti-ui'
+      'monokai'
+    ]
+  'exception-reporting':
+    'userId': '1ac05aa2-6c3e-b58b-6617-ccce77ec4ec5'
+  'welcome':
+    'showOnStartup': false
+  'metrics':
+    'userId': '43c63538127730b92dce283419c89a32f1c622bd'
+  'minimap':
+    'charHeight': 1
+    'plugins':
+      'find-and-replace': true
+      'color-highlight': true
+      'selection': true
+      'git-diff': true
+'.diff.source':
+  'editor': {}

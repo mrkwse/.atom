@@ -1,0 +1,30 @@
+{
+  "name": "minimap-highlight-selected",
+  "main": "./lib/minimap-highlight-selected",
+  "version": "3.0.0",
+  "description": "A minimap binding for the highlight-selected package",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abe33/minimap-highlight-selected"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "event-kit": ">= 0.7.2",
+    "underscore-plus": "1.x"
+  },
+  "readme": "# minimap-highlight-selected package\n\nA minimap binding for the [highlight-selected package](https://github.com/richrace/highlight-selected).\n\n![Screenshot](https://github.com/abe33/minimap-highlight-selected/blob/master/screenshot.png?raw=true)\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/abe33/minimap-highlight-selected/issues"
+  },
+  "homepage": "https://github.com/abe33/minimap-highlight-selected",
+  "_id": "minimap-highlight-selected@3.0.0",
+  "dist": {
+    "shasum": "9791f739ffc31505cdd3addc8bd9e5b655d5b5bc"
+  },
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25821-f9tyh1/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25821-f9tyh1/package.tgz"
+}

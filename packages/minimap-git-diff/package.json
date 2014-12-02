@@ -1,0 +1,35 @@
+{
+  "name": "minimap-git-diff",
+  "main": "./lib/minimap-git-diff",
+  "version": "3.0.8",
+  "description": "A minimap binding for the git diff package",
+  "author": {
+    "name": "Cédric Néhémie",
+    "email": "cedric.nehemie@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abe33/minimap-git-diff"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.125.0"
+  },
+  "dependencies": {
+    "mixto": "1.x",
+    "event-kit": ">= 0.7.2",
+    "atom-utils": "0.0.1"
+  },
+  "readme": "# minimap-git-diff package\n\nA minimap binding for the Atom git-diff package.\n\n![Minimap Git Diff Screenshot](https://github.com/abe33/minimap-git-diff/blob/master/screenshot.png?raw=true)\n\nYou will need the [Minimap package](https://github.com/fundon/atom-minimap) installed to use this package.\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/abe33/minimap-git-diff/issues"
+  },
+  "homepage": "https://github.com/abe33/minimap-git-diff",
+  "_id": "minimap-git-diff@3.0.8",
+  "dist": {
+    "shasum": "41a53a0dc6eeefcc28bb5c7bac609b3bdfe6e9f6"
+  },
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25739-l1whal/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114104-25739-l1whal/package.tgz"
+}

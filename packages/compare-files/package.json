@@ -1,0 +1,33 @@
+{
+  "name": "compare-files",
+  "main": "./lib/compare-files",
+  "version": "0.2.6",
+  "description": "Compares two files and show the diff",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/floydpink/atom-compare-files"
+  },
+  "engines": {
+    "atom": ">0.61.0"
+  },
+  "dependencies": {
+    "diff": "^1.0.8",
+    "lodash": "^2.4.1",
+    "temp": "^0.7.0",
+    "node-html-encoder": "0.0.2"
+  },
+  "readme": "# compare-files\n\nCompares two files and shows the diff\n\n## Getting Started\nInstall the module with: `apm install compare-files`\n\n## Usage\n\n1. Click on the two files that are to be compared in the tree view\n2. Invoke the command using any of the below:\n  1. From Command Palette (<kbd>⌘</kbd>+<kbd>⌂</kbd>+<kbd>P</kbd>) invoke `Compare Files: Compare`\n  2. Right click on one of the selected files and choose `Compare Files`\n  3. Use the keyboard shortcut - <kbd>⌘</kbd>+<kbd>⌃</kbd>+<kbd>C</kbd>\n\n\n![Screencast](http://i.imgur.com/1VBTGTy.gif)\n\n## License\nCopyright (c) 2014 floydpink. Licensed under the MIT license.\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/floydpink/atom-compare-files/issues"
+  },
+  "homepage": "https://github.com/floydpink/atom-compare-files",
+  "_id": "compare-files@0.2.6",
+  "dist": {
+    "shasum": "aaa95e920b03927e1bad3097fcf6fed076a9c3eb"
+  },
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114914-23548-k67vd9/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114914-23548-k67vd9/package.tgz"
+}
