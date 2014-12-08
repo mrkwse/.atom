@@ -1,3 +1,39 @@
+<a name="v2.4.4"></a>
+# v2.4.4 (2014-12-04)
+
+## :bug: Bug Fixes
+
+- Fix broken view when palette is sorted ([c02c6f9f](https://github.com/abe33/atom-project-palette-finder/commit/c02c6f9fe2b51e9d22ff30de50eb37cd22499b65), [#17](https://github.com/abe33/atom-project-palette-finder/issues/17))
+
+<a name="v2.4.3"></a>
+# v2.4.3 (2014-12-04)
+
+## :bug: Bug Fixes
+
+- Better version declaration for atom-space-pen-views ([3acc2cab](https://github.com/abe33/atom-project-palette-finder/commit/3acc2cabc075535806aef40079af5405e4a1a035))
+
+<a name="v2.4.1"></a>
+# v2.4.1 (2014-12-03)
+
+## :bug: Bug Fixes
+
+- Remove dead code in a view
+
+<a name="v2.4.0"></a>
+# v2.4.0 (2014-12-02)
+
+## :sparkles: Features
+
+- Add a scopes array in config to manage watched files ([f0588291](https://github.com/abe33/atom-project-palette-finder/commit/f05882918364ab202ad17053c7c90f1cd6a2d568), [#15](https://github.com/abe33/atom-project-palette-finder/issues/15))
+
+## :bug: Bug Fixes
+
+- Fix tooltip creation since deprecation of setTooltip ([e6195931](https://github.com/abe33/atom-project-palette-finder/commit/e61959319dded28f3ad3b577f9d0efcdfc19b07e))
+
+## :racehorse: Performances
+
+- Speed up startup by delaying requires ([a7858e1e](https://github.com/abe33/atom-project-palette-finder/commit/a7858e1ec0f6a0837ccc02175a7f5e100532a0eb))
+
 <a name="v2.3.2"></a>
 # v2.3.2 (2014-11-26)
 

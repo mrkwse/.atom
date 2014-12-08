@@ -2,13 +2,17 @@
   'editor':
     'normalizeIndentOnPaste': false
     'softTabs': false
-    'invisibles': {}
     'fontSize': 12
+    'invisibles': {}
   'core':
     'useReactEditor': true
     'themes': [
       'seti-ui'
       'monokai'
+    ]
+    'disabledPackages': [
+      'vim-mode'
+      'atom-2048'
     ]
   'exception-reporting':
     'userId': '1ac05aa2-6c3e-b58b-6617-ccce77ec4ec5'

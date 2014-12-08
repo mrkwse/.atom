@@ -1,7 +1,7 @@
 {
   "name": "Zen",
   "main": "./lib/zen",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": true,
   "description": "Distraction free writing.",
   "activationEvents": [
@@ -22,10 +22,23 @@
     "url": "https://github.com/defunkt/zen/issues"
   },
   "homepage": "https://github.com/defunkt/zen",
-  "_id": "Zen@0.9.0",
+  "_id": "Zen@0.10.0",
   "dist": {
-    "shasum": "94c5abfb95ace8e4e1c3b374c523e278089c7208"
+    "shasum": "53362cfb2d4051558e7465bdbd5fde8b4f438d3a"
   },
-  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114101-15009-1dyz7ht/package.tgz",
-  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114101-15009-1dyz7ht/package.tgz"
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114114-11179-1np7p4/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114114-11179-1np7p4/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".coffee": [
+        "lib/zen.coffee"
+      ],
+      ".json": [
+        "package.json"
+      ]
+    },
+    "folders": []
+  }
 }

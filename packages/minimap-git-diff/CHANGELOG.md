@@ -1,3 +1,23 @@
+<a name="v3.0.11"></a>
+# v3.0.11 (2014-12-05)
+
+## :bug: Bug Fixes
+
+- Fix error still raised when adding marker to a destroyed buffer ([afc00dd7](https://github.com/abe33/minimap-git-diff/commit/afc00dd79a7aff44fcbdc4840b0eee79376bfdb7))
+
+<a name="v3.0.10"></a>
+# v3.0.10 (2014-12-05)
+
+- Remove warning and prevent marker creation if editor was destroyed
+
+<a name="v3.0.9"></a>
+# v3.0.9 (2014-12-05)
+
+## :bug: Bug Fixes
+
+- Fix use of deprecated minimap API ([8770ea30](https://github.com/abe33/minimap-git-diff/commit/8770ea3070532a00d3d82621961065e52f420118))
+- Fix broken plugin with latest minimap changes ([b1a2e958](https://github.com/abe33/minimap-git-diff/commit/b1a2e958d6d2731a51f0239ca12156521ebbd1d3))
+
 <a name="v3.0.8"></a>
 # v3.0.8 (2014-10-29)
 

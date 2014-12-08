@@ -4,11 +4,11 @@ temp = require 'temp'
 wrench = require 'wrench'
 Color = require 'pigments'
 ProjectPaletteFinder = require '../lib/project-palette-finder'
-{WorkspaceView} = require 'atom'
 
 waitsForPromise = (fn) -> window.waitsForPromise timeout: 30000, fn
 
 describe "ProjectPaletteFinder", ->
+  [workspaceElement] = []
 
   beforeEach ->
     atom.project.setPaths([path.join(__dirname, 'fixtures')])
@@ -18,14 +18,16 @@ describe "ProjectPaletteFinder", ->
     wrench.copyDirSyncRecursive(fixturesPath, tempPath, forceDelete: true)
     atom.project.setPaths([tempPath])
 
-    atom.workspaceView = new WorkspaceView
+    atom.config.set('project-palette-finder.saveWatchersScopes', [
+      'text.plain.null-grammar'
+    ])
 
     waitsForPromise ->
       atom.packages.activatePackage('project-palette-finder')
 
   it 'scans the project on activation', ->
     readyCallback = jasmine.createSpy('readyCallback')
-    ProjectPaletteFinder.on 'palette:ready', readyCallback
+    ProjectPaletteFinder.onDidUpdatePalette readyCallback
 
     waitsFor -> readyCallback.callCount is 1
 
@@ -37,12 +39,58 @@ describe "ProjectPaletteFinder", ->
 
       expect(Color.colorExpressions.palette).toBeDefined()
 
+  describe 'when an editor is opened', ->
+    [editor] = []
+    describe 'with a supported file', ->
+      beforeEach ->
+        waitsFor ->
+          atom.workspace.open('palette.less')
+
+        runs ->
+          workspaceElement = atom.views.getView(atom.workspace)
+          jasmine.attachToDOM(workspaceElement)
+
+          atom.workspace.getActivePane().activateNextItem()
+
+        waitsFor ->
+          editor = atom.workspace.getActiveEditor()
+
+      it 'refreshes the palette on save', ->
+        spyOn(ProjectPaletteFinder, 'scanProject')
+
+        editor.getBuffer().emitter.emit('did-save')
+
+        expect(ProjectPaletteFinder.scanProject).toHaveBeenCalled()
+
+    describe 'with a unsupported file', ->
+      beforeEach ->
+        waitsFor ->
+          atom.config.set('project-palette-finder.saveWatchersScopes', [])
+          atom.workspace.open('sample.coffee')
+
+        runs ->
+          workspaceElement = atom.views.getView(atom.workspace)
+          jasmine.attachToDOM(workspaceElement)
+
+          atom.workspace.getActivePane().activateNextItem()
+
+        waitsFor ->
+          editor = atom.workspace.getActiveEditor()
+
+      it 'does not refresh the palette on save', ->
+        spyOn(ProjectPaletteFinder, 'scanProject')
+
+        editor.getBuffer().emitter.emit('did-save')
+
+        expect(ProjectPaletteFinder.scanProject).not.toHaveBeenCalled()
+
+
   describe 'palette:find-all-colors command', ->
     it 'scans the project to find every colors', ->
       readyCallback = jasmine.createSpy('readyCallback')
-      ProjectPaletteFinder.on 'palette:search-ready', readyCallback
+      ProjectPaletteFinder.onDidFindColors readyCallback
 
-      atom.workspaceView.trigger('palette:find-all-colors')
+      atom.commands.dispatch(workspaceElement, 'palette:find-all-colors')
 
       waitsFor -> readyCallback.callCount is 1
 

@@ -1,5 +1,5 @@
+{View} = require 'atom-space-pen-views'
 path = require 'path'
-{View} = require 'atom'
 
 module.exports =
 class ProjectPaletteColorView extends View
@@ -15,17 +15,11 @@ class ProjectPaletteColorView extends View
     super
 
     @colorPreview.css backgroundColor: paletteItem.color.toCSS()
-    @colorPreview.setTooltip(paletteItem.name)
+    @tooltipSubscription = atom.tooltips.add(@colorPreview, title: paletteItem.name)
     @colorName.text paletteItem.name
     @colorPath.text path.relative(atom.project.getPath(), paletteItem.filePath) + ':' + (paletteItem.row + 1)
 
     grammar = atom.syntax.selectGrammar("hello.#{paletteItem.extension}", paletteItem.lineText)
-
-    # Highlights = require 'highlights'
-    # highlighter = new Highlights(includePath: grammar.path)
-    # html = highlighter.highlightSync
-    #   fileContents: paletteItem.lineText
-    #   scopeName: grammar.scopeName
 
     @colorLine.empty()
     @colorLine.append(paletteItem.lineText)

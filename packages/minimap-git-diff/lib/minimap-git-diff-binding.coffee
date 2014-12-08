@@ -7,21 +7,22 @@ class MinimapGitDiffBinding
   active: false
 
   constructor: (@editorView, @gitDiff, @minimapView) ->
-    {@editor} = @editorView
+    @editor = @editorView.getModel()
     @decorations = {}
     @markers = null
     @subscriptions = new CompositeDisposable
 
   activate: ->
-    editor = @editorView.getEditor()
-    @subscriptions.add editor.onDidChangePath @subscribeToBuffer
-    if editor.onDidChangeScreenLines?
-      @subscriptions.add editor.onDidChangeScreenLines @updateDiffs
+    @subscriptions.add @editor.onDidChangePath @subscribeToBuffer
+    if @editor.onDidChangeScreenLines?
+      @subscriptions.add @editor.onDidChangeScreenLines @updateDiffs
     else
-      @subscriptions.add editor.onDidChange @updateDiffs
+      @subscriptions.add @editor.onDidChange @updateDiffs
 
-    @subscriptions.add @getRepo().onDidChangeStatuses @scheduleUpdate
-    @subscriptions.add @getRepo().onDidChangeStatus @scheduleUpdate
+    repository = @getRepo()
+
+    @subscriptions.add repository.onDidChangeStatuses @scheduleUpdate
+    @subscriptions.add repository.onDidChangeStatus @scheduleUpdate
 
     @subscribeToBuffer()
 
@@ -36,9 +37,8 @@ class MinimapGitDiffBinding
 
   updateDiffs: =>
     @removeDecorations()
-    if path = @getPath()
-      if @diffs = @getDiffs()
-        @addDecorations(@diffs)
+    if @getPath() and @diffs = @getDiffs()
+      @addDecorations(@diffs)
 
   addDecorations: (diffs) ->
     for {oldStart, newStart, oldLines, newLines} in diffs
@@ -50,7 +50,6 @@ class MinimapGitDiffBinding
         @markRange(startRow, startRow, '.minimap .git-line-removed')
       else
         @markRange(startRow, endRow, '.minimap .git-line-modified')
-    return
 
   removeDecorations: ->
     return unless @markers?
@@ -58,13 +57,11 @@ class MinimapGitDiffBinding
     @markers = null
 
   markRange: (startRow, endRow, scope) ->
-    try
-      marker = @editor.markBufferRange([[startRow, 0], [endRow, Infinity]], invalidate: 'never')
-      @minimapView.decorateMarker(marker, type: 'line', scope: scope)
-      @markers ?= []
-      @markers.push(marker)
-    catch e
-      console.warn 'markRange failed', e.stack
+    return if @editor.displayBuffer.isDestroyed()
+    marker = @editor.markBufferRange([[startRow, 0], [endRow, Infinity]], invalidate: 'never')
+    @minimapView.decorateMarker(marker, type: 'line', scope: scope)
+    @markers ?= []
+    @markers.push(marker)
 
   destroy: ->
     @removeDecorations()
@@ -72,10 +69,12 @@ class MinimapGitDiffBinding
 
   getPath: -> @buffer?.getPath()
 
-  getRepo: -> atom.project?.getRepo()
+  getRepositories: -> atom.project?.getRepositories()
+
+  getRepo: -> @getRepositories()?[0]
 
   getDiffs: ->
-    @getRepo()?.getLineDiffs(@getPath(), @editorView.getText())
+    @getRepo()?.getLineDiffs(@getPath(), @buffer.getText())
 
   unsubscribeFromBuffer: ->
     if @buffer?

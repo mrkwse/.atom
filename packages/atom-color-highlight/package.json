@@ -1,7 +1,7 @@
 {
   "name": "atom-color-highlight",
   "main": "./lib/atom-color-highlight",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "private": true,
   "description": "Highlights color in files",
   "repository": {
@@ -30,12 +30,12 @@
     "url": "https://github.com/abe33/atom-color-highlight/issues"
   },
   "homepage": "https://github.com/abe33/atom-color-highlight",
-  "_id": "atom-color-highlight@2.0.13",
+  "_id": "atom-color-highlight@2.0.14",
   "dist": {
-    "shasum": "19f6a9620d99443e470d4ecca8c4ef7adeff14ee"
+    "shasum": "ef3dda75658cc5f9d873b096b2d73ffb345c9465"
   },
-  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114112-6579-1nk8bzm/package.tgz",
-  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114112-6579-1nk8bzm/package.tgz",
+  "_resolved": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114114-11187-j1l5y3/package.tgz",
+  "_from": "/private/var/folders/tf/st74mh0s2lxcfj1cr7l7c57r0000gn/T/d-114114-11187-j1l5y3/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [

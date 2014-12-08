@@ -1,16 +1,10 @@
-_ = require 'underscore-plus'
-fs = require 'fs'
-url = require 'url'
-path = require 'path'
-Color = require 'pigments'
-querystring = require 'querystring'
-{Emitter} = require 'emissary'
+EmitterMixin = require('emissary').Emitter
+{Emitter, CompositeDisposable} = require 'event-kit'
 
-[Palette, PaletteItem, ProjectPaletteView, ProjectColorsResultsView, ProjectColorsResultView] = []
+[Palette, PaletteItem, ProjectPaletteView, ProjectColorsResultsView, ProjectColorsResultView, Color, deprecate, url, _] = []
 
 class ProjectPaletteFinder
-  @Color: Color
-  Emitter.includeInto(this)
+  EmitterMixin.includeInto(this)
 
   @patterns: [
     '\\$[a-zA-Z0-9-_]+\\s*:'
@@ -50,6 +44,18 @@ class ProjectPaletteFinder
       items:
         type: 'string'
 
+    saveWatchersScopes:
+      type: 'array'
+      default: [
+        'source.css.less'
+        'source.sass'
+        'source.css.scss'
+        'source.stylus'
+      ]
+      description: 'When a buffer matching one of this scope is saved the palette is reloaded'
+      items:
+        type: 'string'
+
     paletteDisplay:
       type: 'string'
       default: 'list'
@@ -60,16 +66,19 @@ class ProjectPaletteFinder
       default: false
 
   constructor: ->
-    @Color = Color
+    @Color = Color = require 'pigments'
+    @emitter = new Emitter
+    @subscriptions = new CompositeDisposable
 
   activate: ({palette}) ->
-    @scanProject()
-
-    atom.workspaceView.command 'palette:refresh', => @scanProject()
-    atom.workspaceView.command 'palette:view', => @displayView()
-    atom.workspaceView.command 'palette:find-all-colors', => @findAllColors()
+    atom.commands.add 'atom-workspace', {
+      'palette:refresh': => @scanProject()
+      'palette:view': => @displayView()
+      'palette:find-all-colors': => @findAllColors()
+    }
 
     atom.workspace.addOpener (uriToOpen) ->
+      url ||= require 'url'
       ProjectPaletteView ||= require './project-palette-view'
 
       {protocol, host} = url.parse uriToOpen
@@ -78,6 +87,7 @@ class ProjectPaletteFinder
       new ProjectPaletteView
 
     atom.workspace.addOpener (uriToOpen) ->
+      url ||= require 'url'
       ProjectColorsResultsView ||= require './project-colors-results-view'
 
       {protocol, host} = url.parse uriToOpen
@@ -85,10 +95,40 @@ class ProjectPaletteFinder
 
       new ProjectColorsResultsView
 
-    pkg = atom.packages.getLoadedPackage("autocomplete-plus")
-    if pkg?
-      @autocomplete = pkg.mainModule
-      @registerProviders()
+    @initializeWatchers()
+
+    unless atom.inSpecMode()
+      try atom.packages.activatePackage("autocomplete-plus").then (pkg) =>
+        @autocomplete = pkg.mainModule
+        @registerProviders()
+
+    @scanProject()
+
+  onDidUpdatePalette: (callback) ->
+    @emitter.on 'did-update-palette', callback
+
+  onDidFindColors: (callback) ->
+    @emitter.on 'did-find-colors', callback
+
+  on: (event, callback) ->
+    deprecate ?= require('grim').deprecate
+    switch event
+      when 'palette:ready'
+        deprecate('Use ProjectPaletteFinder::onDidUpdatePalette instead')
+      when 'palette:search-ready'
+        deprecate('Use ProjectPaletteFinder::onDidFindColors instead')
+
+    EmitterMixin::on.call(this, event, callback)
+
+  initializeWatchers: ->
+    @subscriptions.add atom.config.observe 'project-palette-finder.saveWatchersScopes', (@saveWatchersScopes) =>
+
+    @subscriptions.add atom.workspace.observeTextEditors (textEditor) =>
+      subscriptions = new CompositeDisposable
+      subscriptions.add textEditor.onDidDestroy -> subscriptions.dispose()
+      subscriptions.add textEditor.onDidSave =>
+        return unless textEditor.getGrammar().scopeName in @saveWatchersScopes
+        @scanProject()
 
   registerProviders: ->
     requestAnimationFrame =>
@@ -101,11 +141,11 @@ class ProjectPaletteFinder
         @providers.push provider
 
   deactivate: ->
+    @subscriptions.dispose()
     @editorSubscription?.off()
     @editorSubscription = null
 
-    @providers.forEach (provider) =>
-      @autocomplete.unregisterProvider provider
+    @providers.forEach (provider) => @autocomplete.unregisterProvider provider
 
     @providers = []
 
@@ -118,15 +158,17 @@ class ProjectPaletteFinder
     @scanProject().then (palette) ->
       uri = "palette://view"
 
-      pane = atom.workspace.paneContainer.paneForUri uri
-
-      pane ||= atom.workspaceView.getActivePaneView().model
+      pane = atom.workspace.paneForUri(uri)
+      pane ||= atom.workspace.getActivePane()
 
       atom.workspace.openUriInPane(uri, pane, {}).done (view) ->
         if view instanceof ProjectPaletteView
           view.setPalette palette
+    .fail (reason) ->
+      console.log reason
 
   scanProject: ->
+    _ ||= require 'underscore-plus'
     Palette ||= require './palette'
     PaletteItem ||= require('./palette-item')(Color)
 
@@ -176,7 +218,11 @@ class ProjectPaletteFinder
               color.rgba = @palette.getItemByName(expr).color.rgba
 
       @emit 'palette:ready', @palette
+      @emitter.emit 'did-update-palette', @palette
       @palette
+
+    .fail (reason) ->
+      console.log reason
 
   findAllColors: ->
     Palette ||= require './palette'
@@ -193,8 +239,8 @@ class ProjectPaletteFinder
 
     uri = "palette://search"
 
-    pane = atom.workspace.paneContainer.paneForUri uri
-    pane ||= atom.workspaceView.getActivePaneView().model
+    pane = atom.workspace.paneForUri(uri)
+    pane ||= atom.workspace.getActivePane()
 
     view = null
 
@@ -236,6 +282,7 @@ class ProjectPaletteFinder
 
       view.searchComplete()
       @emit 'palette:search-ready', palette
+      @emitter.emit 'did-find-colors', palette
       palette
 
   createSearchResultForFile: (m, parentView) ->
