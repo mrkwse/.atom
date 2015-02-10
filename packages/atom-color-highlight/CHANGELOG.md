@@ -1,3 +1,70 @@
+<a name="v3.0.7"></a>
+# v3.0.7 (2015-02-09)
+
+## :bug: Bug Fixes
+
+- Fix calling method on undefined marker ([d58c511b](https://github.com/abe33/atom-color-highlight/commit/d58c511b89525a5d147a66f386e2cbc8c6fe3708), [#64](https://github.com/abe33/atom-color-highlight/issues/64))
+
+<a name="v3.0.6"></a>
+# v3.0.6 (2015-02-03)
+
+- Upgrade pigments version. Includes fixes for [#74](https://github.com/abe33/atom-color-highlight/issues/74))
+
+<a name="v3.0.5"></a>
+# v3.0.5 (2015-01-16)
+
+## :bug: Bug Fixes
+
+- Fix deprecations on editor methods ([8386e01e](https://github.com/abe33/atom-color-highlight/commit/8386e01e72cee23be975d61984dcd23f3ec4b484))
+
+<a name="v3.0.4"></a>
+# v3.0.4 (2015-01-14)
+
+## :bug: Bug Fixes
+
+- Fix missing color search for restored text editors ([f189b73d](https://github.com/abe33/atom-color-highlight/commit/f189b73dc2a316e9754909ca1b9fd679146d90bb))
+- Prevent errors in markers update when res is null ([cfe9dbfa](https://github.com/abe33/atom-color-highlight/commit/cfe9dbfa93e3760c28b313959b93e46ba724426e))
+- Fix remaining deprecations ([36179390](https://github.com/abe33/atom-color-highlight/commit/36179390fe1e20d3118532cd2e93107f3a8c9c99))
+
+<a name="v3.0.3"></a>
+# v3.0.3 (2015-01-07)
+
+## :bug: Bug Fixes
+
+- Fix error raised when closing an editor ([f9914482](https://github.com/abe33/atom-color-highlight/commit/f991448225d1d1dd0c33efd9db8bce087d12b4b2))
+
+<a name="v3.0.2"></a>
+# v3.0.2 (2015-01-05)
+
+## :bug: Bug Fixes
+
+- Fix colors marker not rendered when editor is not active when opened ([5f291f66](https://github.com/abe33/atom-color-highlight/commit/5f291f6620273ad120cbcb265f6d9d8698b7a930))
+
+<a name="v3.0.1"></a>
+# v3.0.1 (2015-01-03)
+
+- Add missing CHANGELOG entries for v3.0.0.
+
+<a name="v3.0.0"></a>
+# v3.0.0 (2015-01-03)
+
+- The major changes in v3.0.0 concerns the view appended to the DOM. Now views are handled through custom elements instead of `space-pen` views.
+
+<a name="v2.0.16"></a>
+# v2.0.16 (2014-12-31)
+
+## :bug: Bug Fixes
+
+- Fix marker display issue when scrolling ([01aba50e](https://github.com/abe33/atom-color-highlight/commit/01aba50e0fd89262275895c4274f74115db27242))
+
+<a name="v2.0.15"></a>
+# v2.0.15 (2014-12-30)
+
+## :bug: Bug Fixes
+
+- Fix broken update check method ([f1f9c992](https://github.com/abe33/atom-color-highlight/commit/f1f9c992197a081cb7489fdef93293d4a8fc8df8))
+- Fix remaining deprecations ([c186b932](https://github.com/abe33/atom-color-highlight/commit/c186b93207d5a516cd7d425e8abbf306385e3135))
+
 <a name="v2.0.14"></a>
 # v2.0.14 (2014-12-02)
 

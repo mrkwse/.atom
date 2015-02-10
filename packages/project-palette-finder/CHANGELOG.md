@@ -1,3 +1,62 @@
+<a name="v2.4.13"></a>
+# v2.4.13 (2015-02-06)
+
+## :bug: Bug Fixes
+
+- Fix var with !default not found ([b7ee200b](https://github.com/abe33/atom-project-palette-finder/commit/b7ee200bc36bbcb1cf0a02b4127381be4cc46c33), [#23](https://github.com/abe33/atom-project-palette-finder/issues/23))
+
+
+<a name="v2.4.12"></a>
+# v2.4.12 (2015-02-03)
+
+## :bug: Bug Fixes
+
+- Fix broken completion when palette isn't available yet ([6d9add21](https://github.com/abe33/atom-project-palette-finder/commit/6d9add217ad1fed0d4b03cebeab6b4dd955abf52), [#24](https://github.com/abe33/atom-project-palette-finder/issues/24))
+
+<a name="v2.4.11"></a>
+# v2.4.11 (2015-02-03)
+
+## :bug: Bug Fixes
+
+- Fix autocomplete API deprecations ([53b1fbcf](https://github.com/abe33/atom-project-palette-finder/commit/53b1fbcfc2a647b005825cbb64929761122c8b07), [#28](https://github.com/abe33/atom-project-palette-finder/issues/28))
+- Includes new `pigments` version that fixes [#19](https://github.com/abe33/atom-project-palette-finder/issues/19) and [#23](https://github.com/abe33/atom-project-palette-finder/issues/23)
+
+<a name="v2.4.10"></a>
+# v2.4.10 (2015-01-30)
+
+## :bug: Bug Fixes
+
+- Added a check for items existing ([2348f4c0](https://github.com/abe33/atom-project-palette-finder/commit/2348f4c02a1bd30b12df10aba207f5e5fde4c627))
+  <br>If items doesn't exist on palette then the map call fails. Returns empty array as a fallback.
+
+<a name="v2.4.9"></a>
+# v2.4.9 (2015-01-14)
+
+## :bug: Bug Fixes
+
+- Fix racing condition when the file is saved ([ee0d0f9c](https://github.com/abe33/atom-project-palette-finder/commit/ee0d0f9cc5fc279b5623f23f9b17e2036720da71))
+
+<a name="v2.4.8"></a>
+# v2.4.8 (2015-01-14)
+
+## :bug: Bug Fixes
+
+- Fix broken commands since change in pane's URI API ([61549b3b](https://github.com/abe33/atom-project-palette-finder/commit/61549b3bd3644064a7ac65a6b0ac031bca56e4d5))
+
+<a name="v2.4.7"></a>
+# v2.4.7 (2014-12-29)
+
+## :bug: Bug Fixes
+
+- Fix view regexp breaking with windows paths ([1a4adae2](https://github.com/abe33/atom-project-palette-finder/commit/1a4adae228b659c45c1a4db4a556faf789672f99), [#20](https://github.com/abe33/atom-project-palette-finder/issues/20))
+
+<a name="v2.4.5"></a>
+# v2.4.5 (2014-12-12)
+
+## :bug: Bug Fixes
+
+- Fix use of deprecated autocomplete-plus API ([490e42b5](https://github.com/abe33/atom-project-palette-finder/commit/490e42b52ba67ab21d2cb0fea1f6cd004faf1d2e))
+
 <a name="v2.4.4"></a>
 # v2.4.4 (2014-12-04)
 

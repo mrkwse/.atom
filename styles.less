@@ -20,16 +20,22 @@
 
 }
 
-.bracket-matcher {
-  background-color: #991199;
+atom-text-editor::shadow .bracket-matcher {
+  background-color: #772222;
+  color: #881188;
 }
 
-.editor .git-commit.line-too-long.deprecated {
+atom-text-editor::shadow .gutter {
+
+    // background-color: #dfdddd;
+}
+
+atom-text-editor::shadow .git-commit.line-too-long.deprecated {
   color: orange;
   text-decoration: none;
 }
 
-.editor .git-commit.line-too-long.illegal {
+atom-text-editor::shadow .git-commit.line-too-long.illegal {
   color: #fff;
   background: #DA2C43;
   opacity: 0.9;

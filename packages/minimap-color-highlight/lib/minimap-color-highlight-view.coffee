@@ -6,30 +6,22 @@ Q = require 'q'
 # file is loaded. The binding instance will evaluate the module when
 # created because at that point we're sure that both modules have been
 # loaded.
-module.exports = ->
-  colorHighlightPackage = atom.packages.getLoadedPackage('atom-color-highlight')
-  minimapPackage = atom.packages.getLoadedPackage('minimap')
-
-  minimap = require (minimapPackage.path)
-  colorHighlight = require (colorHighlightPackage.path)
-
+module.exports = (minimapPkg, colorHighlight) ->
   class MinimapColorHighlighView
 
-    constructor: (@model, @editorView) ->
+    constructor: (@model, @editor) ->
       @decorationsByMarkerId = {}
 
-      {@editor} = @editorView
-      @model = colorHighlight.modelForEditorView(@editorView)
-
-      @subscription = @model.on 'updated', @markersUpdated
-      @markersUpdated(@model.markers) if @model?
+      @subscription = @model.onDidUpdateMarkers @requestMarkersUpdate
+      @requestMarkersUpdate() if @model?
+      @observeConfig()
 
     destroy: ->
       @subscription.off()
       @destroyDecorations()
       @minimapView?.find('.atom-color-highlight').remove()
 
-     observeConfig: ->
+    observeConfig: ->
       atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildDecorations
       atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildDecorations
       atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildDecorations
@@ -39,50 +31,39 @@ module.exports = ->
     destroyDecorations: ->
       decoration.destroy() for id,decoration of @decorationsByMarkerId
 
-    getMinimap: ->
-      defer = Q.defer()
-      if @editorView?.hasClass('editor')
-        minimapView = minimap.minimapForEditorView(@editorView)
-        if minimapView?
-          defer.resolve(minimapView)
-        else
-          poll = =>
-            minimapView = minimap.minimapForEditorView(@editorView)
-            if minimapView?
-              defer.resolve(minimapView)
-            else
-              setTimeout(poll, 10)
-
-          setTimeout(poll, 10)
-      else
-        defer.reject("#{@editorView} is not a legal editor")
-
-      defer.promise
+    getMinimap: -> minimapPkg.minimapForEditor(@editor)
 
     updateSelections: ->
 
+    requestMarkersUpdate: =>
+      return if @frameRequested
+
+      @frameRequested = true
+      requestAnimationFrame =>
+        @updateMarkers()
+        @frameRequested = false
+
+    updateMarkers: =>
+      @markersUpdated(@model.markers)
+
     markersUpdated: (markers) =>
-      @getMinimap()
-      .then (minimap) =>
+      markers ||= []
+      minimap = @getMinimap()
+      decorationsToRemove = _.clone(@decorationsByMarkerId)
+      for marker in markers
+        continue if @markerHidden(marker)
 
-        decorationsToRemove = _.clone(@decorationsByMarkerId)
-        for marker in markers
-          continue if @markerHidden(marker)
+        if @decorationsByMarkerId[marker.id]?
+          delete decorationsToRemove[marker.id]
+        else
+          decoration = minimap.decorateMarker(marker, type: 'highlight', color: marker.bufferMarker.properties.cssColor)
+          @decorationsByMarkerId[marker.id] = decoration
 
-          if @decorationsByMarkerId[marker.id]?
-            delete decorationsToRemove[marker.id]
-          else
-            decoration = minimap.decorateMarker(marker, type: 'highlight', color: marker.bufferMarker.properties.cssColor)
-            @decorationsByMarkerId[marker.id] = decoration
+      @markers = markers
 
-        @markers = markers
-
-        for id, decoration of decorationsToRemove
-          decoration.destroy()
-          delete @decorationsByMarkerId[id]
-      .fail (reason) ->
-        console.log reason.stack
-
+      for id, decoration of decorationsToRemove
+        decoration.destroy()
+        delete @decorationsByMarkerId[id]
 
     rebuildDecorations: =>
       @destroyDecorations()

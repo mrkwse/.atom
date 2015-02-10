@@ -1,3 +1,38 @@
+<a name="v4.0.0"></a>
+# v4.0.0 (2015-02-03)
+
+This version enable exclusive support for Minimap v4.
+
+## :bug: Bug Fixes
+
+- Fix error raised on tab close ([cd7f93c3](https://github.com/abe33/minimap-highlight-selected/commit/cd7f93c3ff84ee78f38974402d7dea37ba477aed))
+- Fix broken plugin since highlight-selected update ([de7b38b2](https://github.com/abe33/minimap-highlight-selected/commit/de7b38b2be40172ff6c4f3cd62aa39a54b0b31e4), [#5](https://github.com/abe33/minimap-highlight-selected/issues/5))
+
+<a name="v3.1.2"></a>
+# v3.1.2 (2015-01-26)
+
+## :bug: Bug Fixes
+
+- Fix deprecations ([4c903462](https://github.com/abe33/minimap-highlight-selected/commit/4c90346280e32065fbde0dd1291c7473b35e57e5))
+
+<a name="v3.1.1"></a>
+# v3.1.1 (2015-01-26)
+
+## :bug: Bug Fixes
+
+- Fix error raised when minimap is not toggled ([148f5732](https://github.com/abe33/minimap-highlight-selected/commit/148f5732bb5009e39508bd2ceb1fadb0e45af3a8), [#4](https://github.com/abe33/minimap-highlight-selected/issues/4))
+
+<a name="v3.1.0"></a>
+# v3.1.0 (2015-01-05)
+
+## :sparkles: Features
+
+- Implement support for both minimap v3 and v4 API ([dc01e08d](https://github.com/abe33/minimap-highlight-selected/commit/dc01e08de819c184effc75df75827480229260bf))
+
+## :bug: Bug Fixes
+
+- Fix error raised when typing in a mini editor ([3d78a2f8](https://github.com/abe33/minimap-highlight-selected/commit/3d78a2f89d57ef29557b44bcc1608243a5133270))
+
 <a name="v3.0.0"></a>
 # v3.0.0 (2014-09-19)
 

@@ -2,8 +2,8 @@ module.exports = ({Provider, Suggestion}) ->
   fuzzaldrin = require 'fuzzaldrin'
 
   class PaletteProvider extends Provider
-    constructor: (editorView, @module) ->
-      super(editorView)
+    constructor: (editor, @module) ->
+      super(editor)
 
     wordRegex: /(@|\$)*\b\w*[a-zA-Z_]\w*\b/g
     buildSuggestions: ->
@@ -15,7 +15,7 @@ module.exports = ({Provider, Suggestion}) ->
       suggestions = []
 
       palette = @module.palette
-      allNames = palette.items.map (i) -> i.name
+      allNames = if palette.items then palette.items.map (i) -> i.name else []
       matchedNames = fuzzaldrin.filter allNames, prefix
 
       palette.items.forEach (item) =>

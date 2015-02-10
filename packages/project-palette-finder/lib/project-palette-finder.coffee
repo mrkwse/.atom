@@ -34,11 +34,11 @@ class ProjectPaletteFinder
     autocompleteScopes:
       type: 'array'
       default: [
-        'source.css'
-        'source.css.less'
-        'source.sass'
-        'source.css.scss'
-        'source.stylus'
+        '.source.css'
+        '.source.css.less'
+        '.source.sass'
+        '.source.css.scss'
+        '.source.stylus'
       ]
       description: 'The palette provider will only complete color names in editors whose scope is present in this list.'
       items:
@@ -97,10 +97,7 @@ class ProjectPaletteFinder
 
     @initializeWatchers()
 
-    unless atom.inSpecMode()
-      try atom.packages.activatePackage("autocomplete-plus").then (pkg) =>
-        @autocomplete = pkg.mainModule
-        @registerProviders()
+    @registerProviders() unless atom.inSpecMode()
 
     @scanProject()
 
@@ -131,23 +128,39 @@ class ProjectPaletteFinder
         @scanProject()
 
   registerProviders: ->
-    requestAnimationFrame =>
-      PaletteProvider = require('./palette-provider')(@autocomplete)
-      @editorSubscription = atom.workspaceView.eachEditorView (editorView) =>
-        provider = new PaletteProvider editorView, this
+    fuzzaldrin = require 'fuzzaldrin'
+    provider =
+      id: 'project-palette-provider'
+      selector: atom.config.get('project-palette-finder.autocompleteScopes').join(',')
+      requestHandler: (options) =>
+        {editor, prefix} = options
 
-        @autocomplete.registerProviderForEditorView provider, editorView
+        return [] unless prefix.length
+        return [] unless @palette
 
-        @providers.push provider
+        suggestions = []
+
+        allNames = @palette.items.map (i) -> i.name
+        matchedNames = fuzzaldrin.filter allNames, prefix
+
+        @palette.items.forEach (item) ->
+          return unless item.name in matchedNames
+          suggestions.push {
+            word: item.name
+            label: "<span class='color-suggestion-preview' style='background: #{item.color.toCSS()}'></span>"
+            renderLabelAsHtml: true
+            className: 'color-suggestion'
+            prefix
+          }
+
+        suggestions
+
+    @serviceRegistration = atom.services.provide('autocomplete.provider', '1.0.0', {provider})
 
   deactivate: ->
     @subscriptions.dispose()
-    @editorSubscription?.off()
-    @editorSubscription = null
-
-    @providers.forEach (provider) => @autocomplete.unregisterProvider provider
-
-    @providers = []
+    @serviceRegistration?.dispose()
+    @serviceRegistration = null
 
   serialize: ->
     {
@@ -158,10 +171,10 @@ class ProjectPaletteFinder
     @scanProject().then (palette) ->
       uri = "palette://view"
 
-      pane = atom.workspace.paneForUri(uri)
+      pane = atom.workspace.paneForURI(uri)
       pane ||= atom.workspace.getActivePane()
 
-      atom.workspace.openUriInPane(uri, pane, {}).done (view) ->
+      atom.workspace.openURIInPane(uri, pane, {}).done (view) ->
         if view instanceof ProjectPaletteView
           view.setPalette palette
     .fail (reason) ->
@@ -172,12 +185,12 @@ class ProjectPaletteFinder
     Palette ||= require './palette'
     PaletteItem ||= require('./palette-item')(Color)
 
-    @palette = new Palette
+    palette = new Palette
 
     filePatterns = @constructor.filePatterns
     results = []
 
-    promise = atom.project.scan @getPatternsRegExp(), paths: filePatterns, (m) ->
+    promise = atom.workspace.scan @getPatternsRegExp(), paths: filePatterns, (m) ->
       results.push m
 
     promise.then =>
@@ -189,12 +202,12 @@ class ProjectPaletteFinder
             spaceBefore = lineForMatch[matchText.length...res.range[0]]
             spaceEnd = lineForMatch[res.range[1]..-1]
             continue unless spaceBefore.match /^\s*$/
-            continue unless spaceEnd.match /^[\s;]*$/
+            continue unless spaceEnd.match /^[\s(!default)?;]*$/
 
             row = range[0][0]
             ext = filePath.split('.')[-1..][0]
             language = @constructor.grammarForExtensions[ext]
-            @palette.addItem new PaletteItem {
+            palette.addItem new PaletteItem {
               filePath
               row
               lineText
@@ -205,7 +218,7 @@ class ProjectPaletteFinder
               colorString: res.match
             }
 
-            items = @palette.items
+            items = palette.items
             .map (item) ->
               _.escapeRegExp item.name
             .sort (a,b) ->
@@ -215,11 +228,14 @@ class ProjectPaletteFinder
             Color.removeExpression('palette')
 
             Color.addExpression 'palette', paletteRegexp, (color, expr) =>
-              color.rgba = @palette.getItemByName(expr).color.rgba
+              try
+                color.rgba = palette.getItemByName(expr).color.rgba
+              catch e
+                console.log color, expr, palette.getItemByName(expr), palette
 
-      @emit 'palette:ready', @palette
-      @emitter.emit 'did-update-palette', @palette
-      @palette
+      @emit 'palette:ready', palette
+      @emitter.emit 'did-update-palette', palette
+      @palette = palette
 
     .fail (reason) ->
       console.log reason
@@ -239,15 +255,15 @@ class ProjectPaletteFinder
 
     uri = "palette://search"
 
-    pane = atom.workspace.paneForUri(uri)
+    pane = atom.workspace.paneForURI(uri)
     pane ||= atom.workspace.getActivePane()
 
     view = null
 
-    atom.workspace.openUriInPane(uri, pane, {}).done (v) ->
+    atom.workspace.openURIInPane(uri, pane, {}).then (v) ->
       view = v if v instanceof ProjectColorsResultsView
 
-    promise = atom.project.scan re, paths: filePatterns, (m) =>
+    promise = atom.workspace.scan re, paths: filePatterns, (m) =>
       for result in m.matches
         result.color = new Color(result.matchText)
         result.range[0][1] += result.matchText.indexOf(result.color.colorExpression)

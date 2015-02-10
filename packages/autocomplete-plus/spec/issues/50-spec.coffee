@@ -1,50 +1,48 @@
-require "../spec-helper"
-{$, EditorView, WorkspaceView} = require 'atom'
-AutocompleteView = require '../../lib/autocomplete-view'
-Autocomplete = require '../../lib/autocomplete'
+{waitForAutocomplete} = require('../spec-helper')
 
-describe "Autocomplete", ->
-  [activationPromise, autocomplete, editorView, editor, completionDelay] = []
+describe 'Autocomplete', ->
+  [mainModule, autocompleteManager, editorView, editor, completionDelay] = []
 
-  describe "Issue 50", ->
+  describe 'Issue 50', ->
     beforeEach ->
-      # Create a fake workspace and open a sample file
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.openSync "issues/50.js"
-      atom.workspaceView.simulateDomAttachment()
+      runs ->
+        # Set to live completion
+        atom.config.set('autocomplete-plus.enableAutoActivation', true)
 
-      # Set to live completion
-      atom.config.set "autocomplete-plus.enableAutoActivation", true
+        # Set the completion delay
+        completionDelay = 100
+        atom.config.set('autocomplete-plus.autoActivationDelay', completionDelay)
+        completionDelay += 100 # Rendering delay
 
-      # Set the completion delay
-      completionDelay = 100
-      atom.config.set "autocomplete-plus.autoActivationDelay", completionDelay
-      completionDelay += 100 # Rendering delay
+        workspaceElement = atom.views.getView(atom.workspace)
+        jasmine.attachToDOM(workspaceElement)
+
+      waitsForPromise -> atom.workspace.open('issues/50.js').then (e) ->
+        editor = e
 
       # Activate the package
-      activationPromise = atom.packages.activatePackage "autocomplete-plus"
+      waitsForPromise -> atom.packages.activatePackage('autocomplete-plus').then (a) ->
+        mainModule = a.mainModule
 
-      editorView = atom.workspaceView.getActiveView()
-      {editor} = editorView
-
-    it "works after closing one of the copied tabs", ->
-      waitsForPromise ->
-        activationPromise
-          .then (pkg) =>
-            autocomplete = pkg.mainModule
+      waitsFor ->
+        mainModule.autocompleteManager?.ready
 
       runs ->
-        expect(autocomplete.autocompleteViews.length).toEqual(1)
+        autocompleteManager = mainModule.autocompleteManager
 
-        editorView.splitRight()
-        expect(autocomplete.autocompleteViews.length).toEqual(2)
+      runs ->
+        editorView = atom.views.getView(editor)
 
-        atom.workspaceView.destroyActivePane()
-        expect(autocomplete.autocompleteViews.length).toEqual(1)
+    it 'works after closing one of the copied tabs', ->
+      runs ->
+        atom.workspace.paneForItem(editor).splitRight({copyActiveItem: true})
+        atom.workspace.getActivePane().destroy()
 
         editor.moveCursorToEndOfLine
         editor.insertNewline()
-        editor.insertText "f"
+        editor.insertText('f')
 
-        advanceClock completionDelay
-        expect(editorView.find(".autocomplete-plus")).toExist()
+        waitForAutocomplete()
+
+        runs ->
+          expect(editorView.querySelector('.autocomplete-plus')).toExist()

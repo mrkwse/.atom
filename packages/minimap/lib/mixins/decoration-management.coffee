@@ -1,5 +1,6 @@
 Mixin = require 'mixto'
 path = require 'path'
+{Emitter} = require 'event-kit'
 Decoration = require path.join(atom.config.resourcePath, 'src', 'decoration')
 
 # Public: The mixin that provides the decorations API to the minimap editor
@@ -10,12 +11,25 @@ class DecorationManagement extends Mixin
 
   # Initializes the decorations related properties.
   initializeDecorations: ->
+    @emitter ?= new Emitter
     @decorationsById = {}
     @decorationsByMarkerId = {}
     @decorationMarkerChangedSubscriptions = {}
     @decorationMarkerDestroyedSubscriptions = {}
     @decorationUpdatedSubscriptions = {}
     @decorationDestroyedSubscriptions = {}
+
+  onDidAddDecoration: (callback) ->
+    @emitter.on 'did-add-decoration', callback
+
+  onDidRemoveDecoration: (callback) ->
+    @emitter.on 'did-remove-decoration', callback
+
+  onDidChangeDecoration: (callback) ->
+    @emitter.on 'did-change-decoration', callback
+
+  onDidUpdateDecoration: (callback) ->
+    @emitter.on 'did-update-decoration', callback
 
   # Returns the decoration with the passed-in id.
   #
@@ -116,7 +130,7 @@ class DecorationManagement extends Mixin
 
       [start, end] = [end, start] if start.row > end.row
 
-      @stackRangeChanges({start, end})
+      @emitRangeChanges({start, end, screenDelta: end - start})
 
     decoration = new Decoration(marker, this, decorationParams)
     @decorationsByMarkerId[marker.id] ?= []
@@ -124,42 +138,44 @@ class DecorationManagement extends Mixin
     @decorationsById[decoration.id] = decoration
 
     @decorationUpdatedSubscriptions[decoration.id] ?= decoration.onDidChangeProperties (event) =>
-      @stackDecorationChanges(decoration)
+      @emitDecorationChanges(decoration)
 
     @decorationDestroyedSubscriptions[decoration.id] ?= decoration.onDidDestroy (event) =>
       @removeDecoration(decoration)
 
-    @stackDecorationChanges(decoration)
+    @emitDecorationChanges(decoration)
     @emitter.emit 'did-add-decoration', {marker, decoration}
     decoration
 
-  # Internal: Registers a change in the {MinimapRenderView} pending changes
-  # corresponding to the passed-in decoration.
+  # Internal: Emits a change in the {Minimap} corresponding to the
+  # passed-in decoration.
   #
   # decoration - The `Decoration` to register changes for.
-  stackDecorationChanges: (decoration) ->
+  emitDecorationChanges: (decoration) ->
     return if decoration.marker.displayBuffer.isDestroyed()
     range = decoration.marker.getScreenRange()
     return unless range?
 
-    @stackRangeChanges(range)
+    @emitRangeChanges(range)
 
-  # Internal: Registers a change for the specified range.
+  # Internal: Emits a change for the specified range.
   #
-  # range - The `Range` ro register changes for.
-  stackRangeChanges: (range) ->
+  # range - The `Range` to emits changes for.
+  emitRangeChanges: (range) ->
     startScreenRow = range.start.row
     endScreenRow = range.end.row
     lastRenderedScreenRow  = @getLastVisibleScreenRow()
     firstRenderedScreenRow = @getFirstVisibleScreenRow()
     screenDelta = (lastRenderedScreenRow - firstRenderedScreenRow) - (endScreenRow - startScreenRow)
 
+    screenDelta = 0 if isNaN(screenDelta)
+
     changeEvent =
       start: startScreenRow
       end: endScreenRow
       screenDelta: screenDelta
 
-    @stackChanges changeEvent
+    @emitChanges changeEvent
 
   # Removes a `Decoration` from this minimap.
   #
@@ -169,7 +185,7 @@ class DecorationManagement extends Mixin
     {marker} = decoration
     return unless decorations = @decorationsByMarkerId[marker.id]
 
-    @stackDecorationChanges(decoration)
+    @emitDecorationChanges(decoration)
 
     @decorationUpdatedSubscriptions[decoration.id].dispose()
     @decorationDestroyedSubscriptions[decoration.id].dispose()
@@ -194,7 +210,7 @@ class DecorationManagement extends Mixin
     return unless decorations
     for decoration in decorations
       @emitter.emit 'did-remove-decoration', {marker, decoration}
-      @stackDecorationChanges(decoration)
+      @emitDecorationChanges(decoration)
 
     @removedAllMarkerDecorations(marker)
 

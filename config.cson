@@ -1,31 +1,27 @@
-'global':
-  'editor':
-    'normalizeIndentOnPaste': false
-    'softTabs': false
-    'fontSize': 12
-    'invisibles': {}
-  'core':
-    'useReactEditor': true
-    'themes': [
-      'seti-ui'
-      'monokai'
+"*":
+  editor:
+    fontSize: 13
+    tabLength: 4
+    softTabs: false
+    invisibles: {}
+  core:
+    disabledPackages: [
+      "atom-2048"
     ]
-    'disabledPackages': [
-      'vim-mode'
-      'atom-2048'
+    themes: [
+      "one-dark-ui"
+      "one-dark-syntax"
     ]
-  'exception-reporting':
-    'userId': '1ac05aa2-6c3e-b58b-6617-ccce77ec4ec5'
-  'welcome':
-    'showOnStartup': false
-  'metrics':
-    'userId': '43c63538127730b92dce283419c89a32f1c622bd'
-  'minimap':
-    'charHeight': 1
-    'plugins':
-      'find-and-replace': true
-      'color-highlight': true
-      'selection': true
-      'git-diff': true
-'.diff.source':
-  'editor': {}
+  "exception-reporting":
+    userId: "1ac05aa2-6c3e-b58b-6617-ccce77ec4ec5"
+  welcome:
+    showOnStartup: false
+  metrics:
+    userId: "43c63538127730b92dce283419c89a32f1c622bd"
+  minimap:
+    plugins:
+      selection: true
+      "color-highlight": true
+      "git-diff": true
+      "find-and-replace": true
+    charHeight: 1

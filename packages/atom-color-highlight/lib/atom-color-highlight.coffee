@@ -1,9 +1,8 @@
-{Emitter} = require 'emissary'
-AtomColorHighlightEditor = null
+{Emitter} = require 'event-kit'
+{deprecate} = require 'grim'
+[AtomColorHighlightModel, AtomColorHighlightElement] = []
 
 class AtomColorHighlight
-  Emitter.includeInto(this)
-
   config:
     markersAtEndOfLine:
       type: 'boolean'
@@ -29,35 +28,53 @@ class AtomColorHighlight
       items:
         type: 'string'
 
-  editors: {}
+  models: {}
+
   activate: (state) ->
-    atom.workspaceView.eachEditorView (editor) =>
-      return if editor.editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
+    AtomColorHighlightModel ||= require './atom-color-highlight-model'
+    AtomColorHighlightElement ||= require './atom-color-highlight-element'
+    @Color ||= require 'pigments'
 
-      AtomColorHighlightEditor ||= require './atom-color-highlight-editor'
+    AtomColorHighlightElement.registerViewProvider(AtomColorHighlightModel)
+    AtomColorHighlightModel.Color = @Color
 
-      colorEditor = new AtomColorHighlightEditor(editor)
+    unless atom.inSpecMode()
+      try atom.packages.activatePackage('project-palette-finder').then (pack) =>
+        finder = pack.mainModule
+        AtomColorHighlightModel.Color = @Color = finder.Color if finder?
+        @subscriptions.add finder.onDidUpdatePalette @update
 
-      @editors[editor.editor.id] = colorEditor
-      @emit 'color-highlight:editor-created', colorEditor
+    @emitter = new Emitter
+    atom.workspace.observeTextEditors (editor) =>
+
+      return if editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
+
+      model = new AtomColorHighlightModel(editor)
+      view = atom.views.getView(model)
+
+      model.init()
+      view.attach()
+
+      model.onDidDestroy => delete @models[editor.id]
+
+      @models[editor.id] = model
+      @emitter.emit 'did-create-model', model
 
   eachColorHighlightEditor: (callback) ->
-    callback?(editor) for id,editor of @editors if callback?
-    @on 'color-highlight:editor-created', callback
+    deprecate 'Use ::observeColorHighlightModels instead'
+    @observeColorHighlightModels(callback)
 
-  viewForEditorView: (editorView) ->
-    @viewForEditor(editorView.getEditor()) if editorView?.hasClass('editor')
+  observeColorHighlightModels: (callback) ->
+    callback?(editor) for id,editor of @models if callback?
+    @onDidCreateModel(callback)
 
-  modelForEditorView: (editorView) ->
-    @modelForEditor(editorView.getEditor()) if editorView?.hasClass('editor')
+  onDidCreateModel: (callback) ->
+    @emitter.on 'did-create-model', callback
 
-  modelForEditor: (editor) -> @editors[editor.id]?.getActiveModel()
-
-  viewForEditor: (editor) -> @editors[editor.id]?.getactiveView()
+  modelForEditor: (editor) -> @models[editor.id]
 
   deactivate: ->
-    for id,editor of @editors
-      @emit 'color-highlight:editor-will-be-destroyed', editor
-      editor.destroy()
+    model.destroy() for id,model of @models
+    @models = {}
 
 module.exports = new AtomColorHighlight
